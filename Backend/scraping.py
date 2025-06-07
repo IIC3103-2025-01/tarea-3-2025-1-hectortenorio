@@ -133,7 +133,7 @@ def ejecutar_scraping(url: str):
         #    writer.writerow([f"[Sidebar] {heading}", value])
 
         #for p in paragraphs:
-         #   writer.writerow(["Contenido", p])
+         #   writer.writerow(["Contenido", p]) ##
 
     return {"mensaje": "Scraping completado con éxito",
             "contenido": paragraphs
