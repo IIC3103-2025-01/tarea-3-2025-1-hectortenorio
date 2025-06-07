@@ -1,7 +1,5 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException, TimeoutException
 from bs4 import BeautifulSoup
+import requests
 import csv
 import unicodedata
 import re
@@ -11,24 +9,14 @@ def ejecutar_scraping(url: str):
     try:
         print("[INFO] Iniciando navegador y cargando página...")
 
-        # Configurar Selenium headless
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("--disable-gpu")
-        driver = webdriver.Chrome(options=options)
-
-        driver.set_page_load_timeout(2)  # Tiempo máximo de espera para cargar
-        driver.get(url)
-
-        html = driver.page_source
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        html = response.text
         print("[INFO] Página cargada y navegador cerrado.")
 
-    except (WebDriverException, TimeoutException) as e:
+    except requests.exceptions.RequestException as e:
         return {"error": f"No se pudo cargar la página: {e}"}
 
-    finally:
-        if driver is not None:
-            driver.quit()
 
     soup = BeautifulSoup(html, "html.parser")
    
