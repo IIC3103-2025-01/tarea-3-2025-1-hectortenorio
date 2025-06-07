@@ -7,6 +7,7 @@ from langchain_core.documents import Document
 from langchain_postgres import PGVector
 import requests
 import os
+import gc
 
 modelo_llm_url = "https://asteroide.ing.uc.cl"
 
@@ -76,6 +77,10 @@ def scraping_endpoint():
     )
 
     vectorstore.add_documents(documents, ids=ids)
+    del documents
+    del chunks
+    del raw_text
+    gc.collect()
 
     return jsonify({"mensaje": f"Scraping y embeddings completados. Total chunks: {len(chunks)}"})
 
@@ -108,7 +113,7 @@ def send_to_model():
     """
     ## segun google un token con 4 caracteres y render tiene memoria limitada para evitar pasarme de los 512 token y de usar exceso de memoria en render
     ## coloco esta restriccion
-    if len(prompt_con_contexto) > 1500:
+    if len(prompt_con_contexto) > 1400:
         prompt_con_contexto = prompt_con_contexto[:1500]
     try:
         response = requests.post(
