@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: wikipedia-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main_api:app
+    envVars:
+      - key: DB_USER
+        value: postgres1
+      - key: DB_PASSWORD
+        value: 1eUC0kRTS3hom3FtXcNddaxRgLkRuzEn
+      - key: DB_NAME
+        value: vector_db_v7wb
+      - key: DB_HOST
+        value: dpg-d1276a3uibrs73eu1lhg-a
+      - key: DB_PORT
+        value: 5432
