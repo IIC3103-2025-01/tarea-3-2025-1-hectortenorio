@@ -8,7 +8,7 @@ function Landingpage() {
 
   const handleSend = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/scrape', {
+        const response = await axios.post('https://tarea-3-2025-1-hectortenorio.onrender.com/scrape', {
           url: message
         })
         console.log('✅ Respuesta del backend:', response.data)

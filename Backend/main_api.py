@@ -30,11 +30,9 @@ vectorstore = PGVector(
     use_jsonb=True,
 )
 
-
 @app.route('/')
 def home():
     return "Flask está funcionando"
-
 
 @app.route("/scrape", methods=["POST"])
 def scraping_endpoint():
@@ -55,7 +53,6 @@ def scraping_endpoint():
         raw_text = "\n".join(contenido)
     else:
         raw_text = contenido
-
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=50)
     chunks = splitter.split_text(raw_text)
@@ -101,7 +98,6 @@ def send_to_model():
     except Exception as e:
         return jsonify({"error": f"Error al buscar en PGVector: {str(e)}"}), 500
 
-    # 2. Concatenar el contexto con el prompt del usuario
     print("se ejecuto el endpoint")
     prompt_con_contexto = f"""
     Usa el siguiente contexto para responder la pregunta:
@@ -110,8 +106,10 @@ def send_to_model():
 
     Pregunta: {user_prompt}
     """
-
-    # 3. Enviar el prompt completo al modelo LLM
+    ## segun google un token con 4 caracteres y render tiene memoria limitada para evitar pasarme de los 512 token y de usar exceso de memoria en render
+    ## coloco esta restriccion
+    if len(prompt_con_contexto) > 1500:
+        prompt_con_contexto = prompt_con_contexto[:1500]
     try:
         response = requests.post(
             "https://asteroide.ing.uc.cl/api/generate",
@@ -132,8 +130,6 @@ def send_to_model():
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Error de conexión: {str(e)}"}), 500
-
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)

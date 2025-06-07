@@ -6,13 +6,14 @@ import axios from 'axios'
 function Chatbotpage(){
     const navigate = useNavigate()
     const [message, setMessage] = useState('')
+    const [isSending, setIsSending] = useState(false)
     const [messages, setMessages] = useState([
     { type: 'bot', text: 'Hola, ¿en qué puedo ayudarte hoy?' }
     ])
 
    const handleSend = async () => {
         if (!message.trim()) return
-
+        setIsSending(true) // desactiv
         const userMessage = { type: 'user', text: message }
         setMessages(prev => [...prev, userMessage])
         setMessage('')
@@ -20,7 +21,7 @@ function Chatbotpage(){
 
 
         try {
-          const response = await axios.post('http://localhost:8000/talk', {
+          const response = await axios.post('https://tarea-3-2025-1-hectortenorio.onrender.com/talk', {
             pregunta: message,
           })
           console.log(userMessage)
@@ -38,6 +39,7 @@ function Chatbotpage(){
           setMessages(prev => [...prev, botError])
           console.error(error)
         }
+      setTimeout(() => setIsSending(false), 1000)
     }
 
 
@@ -87,10 +89,15 @@ function Chatbotpage(){
             className=" pl-[0.2rem] w-full h-[3rem] pr-28 rounded-lg border text-[1rem] "
           />
           <button
-            onClick={handleSend}
-            className="absolute right-[0rem] bg-[#0176DE] hover:bg-[#173F8A] px-[1rem] rounded-md"
+            onClick={handleSend}  // En el enunciado se menciona que no se puedan hacer mas de 10 request por segundo con esto se limita y se asegura
+            disabled={isSending}  // que no se puede enviar mas de 1 request por segundo     
+            className={`absolute right-[0rem] px-[1rem] rounded-md text-white h-[3rem] ${
+              isSending
+                ? 'bg-[#E3E8E8] cursor-not-allowed'
+                : 'bg-[#0176DE] hover:bg-[#173F8A]'
+            }`}
           >
-            Enviar
+            {isSending ? 'Enviando...' : 'Enviar'}
           </button>
         </div>
       </div>
