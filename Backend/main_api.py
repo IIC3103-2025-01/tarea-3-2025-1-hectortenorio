@@ -76,13 +76,15 @@ def scraping_endpoint():
         use_jsonb=True,
     )
 
+    num_chunks = len(chunks)  # ✅ guarda antes de borrar
+
     vectorstore.add_documents(documents, ids=ids)
     del documents
     del chunks
     del raw_text
     gc.collect()
 
-    return jsonify({"mensaje": f"Scraping y embeddings completados. Total chunks: {len(chunks)}"})
+    return jsonify({"mensaje": f"Scraping y embeddings completados. Total chunks: {num_chunks}"})
 
 
 @app.route("/talk", methods=["POST"])

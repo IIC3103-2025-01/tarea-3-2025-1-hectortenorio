@@ -6,8 +6,8 @@ import Landingpage from './Landingpage.jsx'
 import Chatbotpage from './Chatbotpage.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter basename="/tarea-3-2025-1-hectortenorio/">
+ <StrictMode>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landingpage />} />
         <Route path="/chatbot" element={<Chatbotpage />} />
